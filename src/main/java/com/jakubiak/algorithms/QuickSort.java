@@ -1,4 +1,6 @@
 package com.jakubiak.algorithms;
+import org.apache.commons.lang3.ArrayUtils;
+import java.lang.reflect.Array;
 
 public class QuickSort implements SortingAlgorithm {
     @Override
@@ -7,34 +9,47 @@ public class QuickSort implements SortingAlgorithm {
     return arr;
 }
 
-    private  void sort(int[] arr, int left, int right) {
-        if (left >= right) {
+    private  void sort(int[] arr, int low, int high) {
+        if (low >= high) {
             return;
         }
+        int position = partition(arr, low, high);
+        sort(arr, low, position - 1);
+        sort(arr, position + 1, high);
+        }
 
-        int pivotIndex = partition(arr, left, right);
-        sort(arr, left, pivotIndex - 1);
-        sort(arr, pivotIndex + 1, right);
-    }
 
-    private static int partition(int[] arr, int left, int right) {
-        int pivotValue = arr[right];
-        int pivotIndex = left;
-        for (int i = left; i < right; i++) {
-            if (arr[i] < pivotValue) {
-                swap(arr, i, pivotIndex);
-                pivotIndex++;
+    private static int partition(int[] arr, int low, int high) {
+        int pivotValue = arr[high];
+        int i = low;
+        int j = high - 1;
+        while (i < j) {
+            while (arr[i] < pivotValue) {
+                i++;
+            }
+            while (j > low && arr[j] >= pivotValue){
+                j--;
+            }
+            if (i < j) {
+                ArrayUtils.swap(arr, i, j);
+                i++;
+                j++;
             }
         }
-        swap(arr, pivotIndex, right);
-        return pivotIndex;
+        if (i ==  j && arr[i] < pivotValue) {
+           i++;
+        }
+        if (arr[i] != pivotValue) {
+            ArrayUtils.swap(arr, i , high);
+        }
+        return i;
     }
 
-    private static void swap(int[] arr, int i, int j) {
-        int temp = arr[i];
-        arr[i] = arr[j];
-        arr[j] = temp;
-    }
+//    private static void swap(int[] arr, int i, int j) {
+//        int temp = arr[i];
+//        arr[i] = arr[j];
+//        arr[j] = temp;
+//    }
 
     @Override
     public String getAlgorithmName() {
